@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1510566195 source:c:\users\maciej\desktop\foldery\projekty na studia\sieciteleinformatyczneii\main.cpp
+	<fstream>
+	<iostream>
+	<ctime>
+	<cstdlib>
+	<string>
+	<string.h>
+
