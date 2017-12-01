@@ -8,7 +8,7 @@
 #define INPUT_NAME "test.txt"
 #define OUTPUT_NAME "output.txt"
 
-#define PACKET_SIZE 4
+#define PACKET_SIZE 1
 
 using namespace std;
 
@@ -25,39 +25,45 @@ int main()
     infile.seekg (0,infile.end);
     long size = infile.tellg();
     infile.seekg (0);
-
     int packet_num = size/PACKET_SIZE;
     int last_packet = size % PACKET_SIZE;
-
     cout << " Number of full packets: " << packet_num << " last packet: " << last_packet << " //: " << endl;
 
 
-   // packet * pointer = new packet();
-
+    char* buffer1 = new char[packet_num*sizeof(packet) + size];
     if(last_packet == 0){
-        packet * pointer = new packet[packet_num];
-        packet Packets[packet_num];
             for(int i=0; i<packet_num; i++){
-            (*pointer).ID = i;
-            (*pointer).psize = PACKET_SIZE;
-            printf("Number:%d/%d\tSize:%d\n",(*pointer).ID, packet_num, (*pointer).psize);
+                char* MyPackage = new char[sizeof(packet) + PACKET_SIZE];
+                packet* p = (packet*)MyPackage;
+                (*p).ID = i;
+                (*p).psize = PACKET_SIZE;
+                buffer1[i] = MyPackage[i];
         }
     }
     else if(last_packet != 0 && packet_num > 0){
-         packet * pointer = new packet[packet_num+1];
             for(int i=0; i<packet_num+1; i++){
-            (*pointer).ID = i;
-            if(i < packet_num) (*pointer).psize = PACKET_SIZE;
-            if(i == packet_num) (*pointer).psize = last_packet;
-            printf("Number:%d/%d\tSize:%d\n",(*pointer).ID, packet_num, (*pointer).psize);
+                if(i<packet_num){
+                    char* MyPackage = new char[sizeof(packet) + PACKET_SIZE];
+                    packet* p = (packet*)MyPackage;
+                    (*p).ID = i;
+                    (*p).psize = PACKET_SIZE;
+                    buffer1[i] = MyPackage[i];
+                }
+                else if(i==packet_num){
+                    char* MyPackage = new char[sizeof(packet) + last_packet];
+                    packet* p = (packet*)MyPackage;
+                    (*p).ID = i;
+                    (*p).psize = last_packet;
+                    buffer1[i] = MyPackage[i];
+                }
         }
     }
     else if(last_packet != 0 && packet_num == 0){
-         packet * pointer = new packet[1];
-            (*pointer).ID = 0;
-            (*pointer).psize = last_packet;
-            printf("Number:%d/%d\tSize:%d\n",(*pointer).ID, packet_num, (*pointer).psize);
-
+                char* MyPackage = new char[sizeof(packet) + last_packet];
+                packet* p = (packet*)MyPackage;
+                (*p).ID = 0;
+                (*p).psize = last_packet;
+                buffer1[0] = MyPackage[0];
     }
 
     return 0;
