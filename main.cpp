@@ -29,8 +29,15 @@ int main()
     int last_packet = size % PACKET_SIZE;
     cout << " Number of full packets: " << packet_num << " last packet: " << last_packet << " //: " << endl;
 
+    int SizeOfBuffer;
+    if(last_packet == 0)
+        SizeOfBuffer = packet_num*sizeof(packet) + size;
+    else if(last_packet != 0 && packet_num > 0)
+        SizeOfBuffer = (packet_num+1)*sizeof(packet) + size;
+    else if(last_packet != 0 && packet_num != 0)
+        SizeOfBuffer = sizeof(packet) + last_packet;
 
-    char* buffer1 = new char[packet_num*sizeof(packet) + size];
+    char* buffer1 = new char[SizeOfBuffer];
     if(last_packet == 0){
             for(int i=0; i<packet_num; i++){
                 char* MyPackage = new char[sizeof(packet) + PACKET_SIZE];
@@ -65,6 +72,5 @@ int main()
                 (*p).psize = last_packet;
                 buffer1[0] = MyPackage[0];
     }
-
     return 0;
 }
